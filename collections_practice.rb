@@ -1,3 +1,4 @@
+require 'pry'
 def begins_with_r(array)
   if array.none? { |str| str.start_with?('r') != true}
    # i+=1
@@ -21,17 +22,30 @@ def remove_non_strings(array)
 end #directions say to use .class method. not sure how to do this
 
 def count_elements(array)
-  array.group_by(&:itself) # groups douplicate items together
-    .map { |key, value| key.merge(count: value.length)} # counts number of times occur
-end # need to understand this better... I read why to do it this way
+  array.group_by(&:itself).map { |key, value| key.merge(count: value.length)} # counts number of times occur
+end  #&:itself was added to ruby 2.2.0 - gathers groups together
+
+=begin
+def count_elements(array) #another way
+  array.each do |array_hash|
+    name = array_hash[:name] 
+    array_hash[:count] = 0
+    array.each do |other_hash|
+      if other_hash[:name] == name
+        array_hash[:count] +=1
+      end
+    end
+  end.uniq #keeps only unique items 
+end
+=end
 
 def merge_data(people, people_stats)
   array_list = []
-  people.each do |person|
+  people.each do |person, stats|
     name = person[:first_name]
-    people_stats.each do |person_data|
-      if person_data[name]
-        merged_person = person_data[name]
+    people_stats.each do |stats|
+      if stats[name]
+        merged_person = stats[name]
         merged_person[:first_name] = name
         array_list << merged_person
       end
